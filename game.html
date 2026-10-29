@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spider-Net Master: IP Address & Subnetting - Kelompok Klingklung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Orbitron:wght@600;800;900&family=Bangers&display=swap');
+        
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background: #090a16;
+            background-image: 
+                radial-gradient(circle at 50% 20%, rgba(225, 29, 72, 0.35) 0%, transparent 60%),
+                radial-gradient(circle at 80% 80%, rgba(2, 132, 199, 0.3) 0%, transparent 60%),
+                radial-gradient(circle at 10% 80%, rgba(168, 85, 247, 0.25) 0%, transparent 50%),
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 25px 25px, 25px 25px;
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .font-spider {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 1.5px;
+        }
+
+        .font-tech {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* Spider-Man Web Background Overlay */
+        .spider-web-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            opacity: 0.12;
+            background-image: radial-gradient(circle at center, transparent 0%, transparent 70%, rgba(225, 29, 72, 0.4) 100%),
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M50 0 L50 100 M0 50 L100 50 M15 15 L85 85 M15 85 L85 15" stroke="%23ffffff" stroke-width="0.5"/><circle cx="50" cy="50" r="15" fill="none" stroke="%23ffffff" stroke-width="0.5"/><circle cx="50" cy="50" r="30" fill="none" stroke="%23ffffff" stroke-width="0.5"/><circle cx="50" cy="50" r="45" fill="none" stroke="%23ffffff" stroke-width="0.5"/></svg>');
+            background-size: cover, 180px 180px;
+            z-index: 1;
+        }
+
+        .glass-spider {
+            background: rgba(15, 23, 42, 0.88);
+            backdrop-filter: blur(20px);
+            border: 3px solid rgba(225, 29, 72, 0.4);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(225, 29, 72, 0.25);
+        }
+
+        .spider-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border: 2px solid rgba(2, 132, 199, 0.4);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .spidey-btn {
+            box-shadow: 0 6px 0 0 #881337, 0 0 18px rgba(225, 29, 72, 0.4);
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .spidey-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 0 #881337, 0 0 25px rgba(225, 29, 72, 0.6);
+        }
+        .spidey-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 0 #881337;
+        }
+
+        /* Web Splat Overlay on Wrong Answer */
+        @keyframes webSplat {
+            0% { transform: scale(0.2) rotate(-20deg); opacity: 0; }
+            50% { transform: scale(1.1) rotate(5deg); opacity: 1; }
+            80% { transform: scale(1) rotate(0deg); opacity: 0.9; }
+            100% { transform: scale(1.2); opacity: 0; }
+        }
+
+        .web-splat-overlay {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .web-splat-overlay.active {
+            animation: webSplat 1.1s ease-out forwards;
+        }
+
+        /* Walking Person Sprite */
+        @keyframes personWalk {
+            0% { transform: translateY(0px) scaleX(1); }
+            25% { transform: translateY(-4px) rotate(-6deg); }
+            50% { transform: translateY(0px) scaleX(1); }
+            75% { transform: translateY(-4px) rotate(6deg); }
+            100% { transform: translateY(0px) scaleX(1); }
+        }
+
+        .walking-sprite {
+            animation: personWalk 0.35s infinite linear;
+            display: inline-block;
+        }
+
+        /* Love Particle Animation */
+        @keyframes loveBurst {
+            0% { transform: scale(0.3) translateY(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.4) translateY(-40px) rotate(15deg); opacity: 1; }
+            100% { transform: scale(1) translateY(-80px) rotate(-15deg); opacity: 0; }
+        }
+
+        .love-particle {
+            position: absolute;
+            pointer-events: none;
+            animation: loveBurst 1.2s ease-out forwards;
+            font-size: 2.2rem;
+            z-index: 100;
+            filter: drop-shadow(0 0 10px #f43f5e);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen justify-between p-3 md:p-6 select-none relative">
+
+    <div class="spider-web-bg"></div>
+
+    <!-- Web Splat Screen Overlay (Wrong Answer) -->
+    <div id="web-splat-container" class="web-splat-overlay hidden">
+        <svg class="w-80 h-80 text-rose-600 drop-shadow-[0_0_25px_rgba(225,29,72,0.9)]" viewBox="0 0 200 200" fill="currentColor">
+            <path d="M100 10 L110 70 L170 30 L130 85 L190 100 L130 115 L170 170 L110 130 L100 190 L90 130 L30 170 L70 115 L10 100 L70 85 L30 30 L90 70 Z" opacity="0.85"/>
+            <circle cx="100" cy="100" r="25" fill="#991b1b"/>
+            <text x="100" y="108" font-size="28" text-anchor="middle" fill="#ffffff">💔</text>
+        </svg>
+    </div>
+
+    <!-- Header Section -->
+    <header class="max-w-4xl mx-auto w-full mb-3 z-10">
+        <div class="glass-spider rounded-3xl p-3 md:p-4 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-gradient-to-tr from-rose-600 via-red-600 to-sky-600 rounded-2xl text-white shadow-lg shadow-rose-600/50 ring-2 ring-red-400/40">
+                    <i class="fa-solid fa-spider text-2xl animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="font-spider text-2xl md:text-3xl font-black bg-gradient-to-r from-rose-400 via-sky-300 to-amber-300 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(225,29,72,0.5)]">
+                        SPIDER-NET MASTER
+                    </h1>
+                    <p class="text-xs text-rose-200 font-semibold tracking-wide">
+                        Dibuat oleh <span class="text-amber-300 font-bold">Kelompok Klingklung</span>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="toggleAudio()" id="btn-audio" class="p-2.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800 text-amber-400 border border-slate-700 transition spidey-btn">
+                    <i class="fa-solid fa-volume-high text-lg" id="icon-audio"></i>
+                </button>
+                <button onclick="toggleGroupModal()" class="px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-rose-600 via-red-600 to-sky-600 text-white text-xs md:text-sm font-bold border border-rose-400/50 transition spidey-btn flex items-center gap-2">
+                    <i class="fa-solid fa-users text-rose-200"></i> Kelompok Klingklung
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-container" class="max-w-4xl mx-auto w-full flex-1 flex flex-col justify-center z-10 relative">
+
+        <!-- SCREEN 1: START SCREEN, PLAYER NAME & CHARACTER SELECTION -->
+        <div id="screen-start" class="glass-spider rounded-3xl p-6 md:p-8 text-center shadow-2xl relative overflow-hidden">
+            <div class="mb-3 inline-block p-4 bg-gradient-to-br from-rose-600/30 via-sky-600/20 to-slate-900 rounded-3xl text-rose-400 border border-rose-500/50 shadow-inner">
+                <i class="fa-solid fa-spider text-5xl md:text-6xl animate-bounce text-rose-500"></i>
+            </div>
+            
+            <h2 class="font-spider text-3xl md:text-5xl font-black mb-2 text-white tracking-wide drop-shadow-[0_2px_10px_rgba(225,29,72,0.6)]">
+                SPIDER IP & SUBNETTING CHALLENGE
+            </h2>
+            <p class="text-slate-300 max-w-lg mx-auto text-xs md:text-sm mb-4 font-medium">
+                Masukkan nama kamu, pilih pahlawan favorit, dan jawab setiap soal dalam waktu 20 detik untuk meraih skor tertinggi!
+            </p>
+
+            <!-- Player Name Input Box -->
+            <div class="max-w-md mx-auto mb-5 text-left">
+                <label for="player-name-input" class="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-pen"></i> Nama Pemain:
+                </label>
+                <input type="text" id="player-name-input" placeholder="Masukkan Nama Kamu..." maxlength="18" 
+                       class="w-full px-4 py-3 rounded-2xl bg-slate-950/90 border-2 border-rose-500/60 text-white font-bold text-sm focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/30 transition placeholder-slate-500 shadow-inner">
+            </div>
+
+            <!-- Character Selection -->
+            <div class="mb-5">
+                <div class="text-xs font-bold text-rose-300 uppercase tracking-wider mb-3">Pilih Karakter Pemain:</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-lg mx-auto" id="character-selector">
+                    <!-- Dynamic Character Cards -->
+                </div>
+            </div>
+
+            <!-- Rules Summary -->
+            <div class="grid grid-cols-3 gap-2 max-w-md mx-auto mb-6 text-xs font-bold">
+                <div class="p-2.5 spider-card rounded-2xl border border-rose-500/40 flex flex-col items-center">
+                    <i class="fa-solid fa-heart text-rose-500 text-xl mb-1"></i>
+                    <span>3 Hati Nyawa</span>
+                </div>
+                <div class="p-2.5 spider-card rounded-2xl border border-sky-500/40 flex flex-col items-center">
+                    <i class="fa-solid fa-layer-group text-sky-400 text-xl mb-1"></i>
+                    <span>4 Level Bertahap</span>
+                </div>
+                <div class="p-2.5 spider-card rounded-2xl border border-amber-500/40 flex flex-col items-center">
+                    <i class="fa-solid fa-stopwatch text-amber-400 text-xl mb-1"></i>
+                    <span>20s Per Soal</span>
+                </div>
+            </div>
+
+            <button onclick="validateAndStart()" class="spidey-btn bg-gradient-to-r from-rose-600 via-red-600 to-sky-600 text-white font-black py-4 px-10 rounded-2xl text-lg tracking-wider transition transform hover:scale-105">
+                <i class="fa-solid fa-play mr-2"></i> MULAI GAME!
+            </button>
+        </div>
+
+        <!-- SCREEN 2: 5-SECOND COUNTDOWN -->
+        <div id="screen-countdown" class="hidden glass-spider rounded-3xl p-10 text-center shadow-2xl my-auto">
+            <h3 class="font-spider text-2xl md:text-3xl font-black text-rose-400 mb-2">SIAP-SIAP BERTANDING!</h3>
+            <p class="text-slate-300 text-xs md:text-sm mb-1">Pemain: <span id="countdown-player-name" class="font-bold text-amber-300">Pemain</span></p>
+            <p class="text-slate-400 text-xs mb-6">Waktu per soal: 20 Detik</p>
+            <div id="countdown-number" class="font-spider text-7xl md:text-9xl text-amber-400 animate-ping font-black my-4">
+                5
+            </div>
+            <p class="text-sky-300 font-bold text-xs">Dibuat oleh Kelompok Klingklung</p>
+        </div>
+
+        <!-- SCREEN 3: GAMEPLAY SCREEN -->
+        <div id="screen-game" class="hidden flex-col gap-4">
+            
+            <!-- Dashboard Stats -->
+            <div class="grid grid-cols-4 gap-2 md:gap-3">
+                <!-- Level -->
+                <div class="glass-spider p-2.5 md:p-3 rounded-2xl flex items-center justify-between border-rose-500/40">
+                    <div>
+                        <div class="text-[10px] md:text-xs text-slate-400 uppercase font-bold">Level (1-4)</div>
+                        <div id="game-level" class="font-tech text-base md:text-xl font-extrabold text-rose-400">Lvl 1</div>
+                    </div>
+                    <i class="fa-solid fa-bolt text-rose-400/50 text-xl md:text-2xl"></i>
+                </div>
+
+                <!-- Score -->
+                <div class="glass-spider p-2.5 md:p-3 rounded-2xl flex items-center justify-between border-sky-500/40">
+                    <div>
+                        <div class="text-[10px] md:text-xs text-slate-400 uppercase font-bold">Skor</div>
+                        <div id="game-score" class="font-tech text-base md:text-xl font-extrabold text-sky-400">0</div>
+                    </div>
+                    <i class="fa-solid fa-trophy text-sky-400/50 text-xl md:text-2xl"></i>
+                </div>
+
+                <!-- Timer -->
+                <div class="glass-spider p-2.5 md:p-3 rounded-2xl flex items-center justify-between border-amber-500/40">
+                    <div>
+                        <div class="text-[10px] md:text-xs text-slate-400 uppercase font-bold">Sisa Waktu</div>
+                        <div id="game-timer" class="font-tech text-base md:text-xl font-extrabold text-amber-400">20s</div>
+                    </div>
+                    <i class="fa-solid fa-hourglass-half text-amber-400/50 text-xl md:text-2xl"></i>
+                </div>
+
+                <!-- Lives -->
+                <div class="glass-spider p-2.5 md:p-3 rounded-2xl flex items-center justify-between border-rose-500/40">
+                    <div>
+                        <div class="text-[10px] md:text-xs text-slate-400 uppercase font-bold">Nyawa</div>
+                        <div id="game-lives" class="flex gap-1 mt-1 text-rose-500 text-sm md:text-base">
+                            <i class="fa-solid fa-heart"></i>
+                            <i class="fa-solid fa-heart"></i>
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-shield-halved text-rose-500/50 text-xl md:text-2xl"></i>
+                </div>
+            </div>
+
+            <!-- Animated Walking Character Timer Bar (20 Seconds Fixed) -->
+            <div class="glass-spider p-3 rounded-2xl border-rose-500/30 relative overflow-hidden">
+                <div class="flex justify-between items-center text-[11px] font-bold text-slate-300 mb-1 px-1">
+                    <span class="text-rose-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-person-running text-sm"></i> Waktu Menjawab Soal:
+                    </span>
+                    <span class="text-amber-400 font-tech" id="timer-text-track">20 Detik</span>
+                </div>
+                
+                <!-- Track Container -->
+                <div class="relative w-full bg-slate-950/90 h-9 rounded-xl border border-slate-800 p-1 flex items-center overflow-hidden shadow-inner">
+                    <!-- Progress Fill -->
+                    <div id="timer-progress-fill" class="bg-gradient-to-r from-rose-600 via-sky-500 to-amber-400 h-full w-full rounded-lg transition-all duration-300 opacity-50"></div>
+                    
+                    <!-- Walking Character Sprite -->
+                    <div id="walking-character" class="absolute top-0.5 bottom-0.5 flex items-center text-2xl transition-all duration-300 z-10 filter drop-shadow-[0_0_10px_rgba(225,29,72,0.9)]" style="left: 0%;">
+                        <span id="walking-avatar" class="walking-sprite">🏃</span>
+                    </div>
+
+                    <!-- Destination Flag -->
+                    <div class="absolute right-2 text-xl text-yellow-400 animate-pulse">
+                        🏁
+                    </div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div class="glass-spider rounded-3xl p-5 md:p-7 relative border-sky-500/30">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2">
+                        <span id="player-avatar-badge" class="text-2xl bg-slate-900/80 p-1.5 rounded-xl border border-rose-500/40"></span>
+                        <span id="active-player-name-display" class="text-xs font-bold text-amber-300 bg-slate-900/80 px-2.5 py-1.5 rounded-xl border border-amber-500/30"></span>
+                        <span id="question-number" class="text-xs font-tech px-3 py-1.5 bg-rose-500/20 text-rose-300 rounded-full border border-rose-500/40 font-bold">
+                            Soal 1
+                        </span>
+                    </div>
+                    <span id="question-category" class="text-xs text-sky-300 font-bold uppercase tracking-wider bg-sky-500/20 px-3 py-1 rounded-lg border border-sky-500/30">
+                        Dasar IPv4
+                    </span>
+                </div>
+
+                <h3 id="question-text" class="text-base md:text-xl font-bold mb-5 text-slate-100 leading-relaxed">
+                    Pertanyaan akan muncul di sini...
+                </h3>
+
+                <!-- Options -->
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <!-- Material Explanation Box (Displayed on wrong answer / timeout) -->
+                <div id="material-box" class="hidden mt-4 p-4 rounded-2xl bg-slate-950/95 border-2 border-rose-500/50 text-slate-200 text-sm animate-fade-in shadow-2xl">
+                    <div class="flex items-center gap-2 text-rose-400 font-black mb-1.5">
+                        <i class="fa-solid fa-spider text-base"></i> MATERI & PEMBAHASAN:
+                    </div>
+                    <p id="material-text" class="leading-relaxed text-xs md:text-sm text-slate-300">
+                        Penjelasan materi terkait pertanyaan ini.
+                    </p>
+                    <button onclick="nextQuestion()" class="spidey-btn mt-4 w-full py-3 rounded-xl bg-gradient-to-r from-rose-600 via-red-600 to-sky-600 text-white font-black transition">
+                        SOAL SELANJUTNYA <i class="fa-solid fa-arrow-right-long ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: GAME OVER / RESULTS & LEADERBOARD -->
+        <div id="screen-result" class="hidden glass-spider rounded-3xl p-6 md:p-8 text-center shadow-2xl">
+            <div id="result-icon" class="mb-2 text-6xl animate-bounce">
+                🕷️
+            </div>
+            <h2 id="result-title" class="font-spider text-3xl md:text-5xl font-black mb-1 text-white">
+                PERMAINAN SELESAI!
+            </h2>
+            <p id="result-subtitle" class="text-slate-300 text-xs md:text-sm mb-4">Evaluasi Pengetahuan Jaringan Spider-Net Kamu:</p>
+
+            <!-- Motivational Closing Message Box -->
+            <div id="final-closing-message-box" class="p-4 bg-gradient-to-br from-slate-950 via-rose-950 to-slate-900 rounded-2xl border-2 border-rose-500/50 mb-5 max-w-lg mx-auto text-left shadow-lg">
+                <div class="flex items-center gap-2 text-rose-300 font-black text-sm mb-1">
+                    <i class="fa-solid fa-spider text-sky-400 text-lg"></i> PESAN DARI KELOMPOK KLINGKLUNG:
+                </div>
+                <p id="final-player-message" class="text-xs md:text-sm text-slate-200 leading-relaxed font-medium">
+                    Pesan motivasi akan ditayangkan di sini.
+                </p>
+            </div>
+
+            <!-- Rank Badge & Player Info -->
+            <div class="p-3 bg-gradient-to-r from-rose-950/70 to-sky-950/70 rounded-2xl border border-rose-500/40 mb-5 max-w-md mx-auto flex items-center justify-around">
+                <div>
+                    <span class="text-xs text-slate-400 block">Pemain</span>
+                    <span id="final-player-name-display" class="font-bold text-amber-300 text-sm">Spidey</span>
+                </div>
+                <div class="h-8 w-px bg-slate-700"></div>
+                <div>
+                    <span class="text-xs text-slate-400 block">Karakter</span>
+                    <span id="final-char-name" class="font-bold text-rose-300 text-sm">Spidey DevOps</span>
+                </div>
+                <div class="h-8 w-px bg-slate-700"></div>
+                <div>
+                    <span class="text-xs text-slate-400 block">Gelar Rank</span>
+                    <span id="final-rank-badge" class="font-tech font-black text-amber-400 text-sm">Spider Master</span>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-3 gap-3 max-w-md mx-auto mb-6 text-left">
+                <div class="p-3 spider-card rounded-2xl border border-slate-700">
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Total Skor</div>
+                    <div id="final-score" class="font-tech text-lg md:text-2xl font-black text-sky-400">0</div>
+                </div>
+                <div class="p-3 spider-card rounded-2xl border border-slate-700">
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Level Dicapai</div>
+                    <div id="final-level" class="font-tech text-lg md:text-2xl font-black text-rose-400">Lvl 1</div>
+                </div>
+                <div class="p-3 spider-card rounded-2xl border border-slate-700">
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Akurasi</div>
+                    <div id="final-accuracy" class="font-tech text-lg md:text-2xl font-black text-amber-400">0%</div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Table -->
+            <div class="max-w-md mx-auto bg-slate-950/90 rounded-2xl p-3.5 border border-slate-700 mb-6 text-left shadow-xl">
+                <div class="flex justify-between items-center mb-2 px-1">
+                    <span class="text-xs font-bold text-rose-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-ranking-star"></i> PAPAN PERINGKAT (TOP SKOR)
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-semibold">Skor Lokal</span>
+                </div>
+                <div id="leaderboard-list" class="space-y-1.5 text-xs">
+                    <!-- Dynamic Leaderboard Items -->
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-3 justify-center">
+                <button onclick="resetToStartScreen()" class="spidey-btn bg-gradient-to-r from-rose-600 via-red-600 to-sky-600 text-white font-black py-3 px-8 rounded-xl transition">
+                    <i class="fa-solid fa-rotate-right mr-2"></i> MAIN LAGI (UBAH NAMA)
+                </button>
+                <button onclick="toggleGroupModal()" class="spidey-btn bg-slate-800 hover:bg-slate-700 text-white font-bold py-3 px-8 rounded-xl border border-slate-600 transition">
+                    <i class="fa-solid fa-users mr-2"></i> ANGGOTA KELOMPOK
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Group Information Modal -->
+    <div id="modal-group" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-spider rounded-3xl p-6 max-w-md w-full border-rose-500/50 relative shadow-2xl">
+            <button onclick="toggleGroupModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div class="p-3 bg-gradient-to-tr from-rose-600 to-sky-600 text-white rounded-2xl shadow-lg">
+                    <i class="fa-solid fa-spider text-2xl"></i>
+                </div>
+                <div>
+                    <h3 class="font-spider text-2xl font-black text-white">DIBUAT OLEH: KELOMPOK KLINGKLUNG</h3>
+                    <p class="text-xs text-rose-300 font-medium">Pengembang Game IP Address Spider-Net</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div class="p-2.5 bg-slate-950/90 rounded-xl border border-slate-800 flex justify-between items-center">
+                    <span class="text-slate-400">Mata Pelajaran:</span>
+                    <span class="font-bold text-sky-300">Jaringan Komputer / RPL</span>
+                </div>
+
+                <div>
+                    <span class="text-slate-400 font-bold block mb-2">Daftar Anggota Kelompok Klingklung (9 Orang):</span>
+                    <div class="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1" id="members-container">
+                        <!-- Members rendered via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="toggleGroupModal()" class="spidey-btn mt-5 w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-bold transition">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-4xl mx-auto w-full text-center text-xs text-slate-500 py-2 z-10 font-medium">
+        &copy; 2026 Dibuat oleh Kelompok Klingklung — Spider-Net IP Addressing
+    </footer>
+
+    <script>
+        // Player Characters
+        const characters = [
+            { id: 'spidey_dev', name: 'Spidey DevOps', icon: '🕷️', desc: 'Master Subnetting' },
+            { id: 'web_hacker', name: 'Web Slinger', icon: '🕸️', desc: 'Pakar IP Class' },
+            { id: 'spider_queen', name: 'Spider Queen', icon: '🕷️‍♀️', desc: 'Ratu Routing' },
+            { id: 'cyber_hero', name: 'Cyber Hero', icon: '🦸‍♂️', desc: 'Master Gateway' }
+        ];
+
+        // Kelompok Klingklung (9 Members)
+        const groupMembers = [
+            "1. Ridho", "2. Novella", "3. Nadya",
+            "4. Aini", "5. Nia", "6. Wafiq",
+            "7. Sasmita", "8. Marviana", "9. Rika"
+        ];
+
+        // Question Bank Divided into 4 Difficulty Levels
+        const levelQuestionsBank = {
+            1: [
+                { category: "Dasar IPv4", question: "Berapa bit jumlah total panjang dari sebuah alamat IP versi 4 (IPv4)?", options: ["16 Bit", "32 Bit", "64 Bit", "128 Bit"], correct: 1, material: "IPv4 terdiri dari 32 bit yang dibagi menjadi 4 oktet (masing-masing 8 bit)." },
+                { category: "Kelas IP Address", question: "Alamat IP 192.168.1.10 termasuk dalam kategori Alamat IP Kelas berapa?", options: ["Kelas A", "Kelas B", "Kelas C", "Kelas D"], correct: 2, material: "IP Kelas C memiliki rentang oktet pertama 192-223." },
+                { category: "Layanan DNS", question: "Protokol yang menerjemahkan nama domain menjadi IP Address adalah?", options: ["DHCP", "DNS", "FTP", "HTTP"], correct: 1, material: "DNS (Domain Name System) mengonversi domain menjadi IP Address numerik." },
+                { category: "Layanan DHCP", question: "Protokol yang memberikan IP Address otomatis kepada komputer klien adalah?", options: ["DHCP", "DNS", "SMTP", "SNMP"], correct: 0, material: "DHCP mengalokasikan alamat IP secara otomatis pada perangkat jaringan." },
+                { category: "Subnet Mask", question: "Subnet Mask default untuk IP Address Kelas C adalah?", options: ["255.0.0.0", "255.255.0.0", "255.255.255.0", "255.255.255.255"], correct: 2, material: "Subnet mask default Kelas C adalah 255.255.255.0 (/24)." }
+            ],
+            2: [
+                { category: "Subnet Mask Kelas B", question: "Subnet Mask default untuk IP Address Kelas B (172.16.0.0) adalah?", options: ["255.0.0.0", "255.255.0.0", "255.255.255.0", "255.255.255.255"], correct: 1, material: "Subnet Mask default Kelas B adalah 255.255.0.0 (/16)." },
+                { category: "CIDR & Host", question: "Berapa jumlah maksimal usable host yang dapat digunakan pada CIDR /24?", options: ["254 Host", "256 Host", "512 Host", "128 Host"], correct: 0, material: "Total IP = 256. Dikurangi Network ID dan Broadcast ID = 254 Host." },
+                { category: "IP Private", question: "Manakah di bawah ini yang merupakan rentang IP Address Private Kelas A?", options: ["10.0.0.0 - 10.255.255.255", "172.16.0.0 - 172.31.255.255", "192.168.0.0 - 192.168.255.255", "127.0.0.1"], correct: 0, material: "Rentang IP Private Kelas A adalah 10.0.0.0/8." },
+                { category: "Special IP", question: "Alamat IP 127.0.0.1 secara khusus digunakan untuk fungsi apa?", options: ["Default Gateway", "Loopback / Localhost", "Broadcast Address", "DNS Server"], correct: 1, material: "IP 127.0.0.1 (Loopback) digunakan untuk pengujian antarmuka jaringan lokal internal." },
+                { category: "Network Layer", question: "Dalam model OSI 7 Layer, pada layer manakah protokol IP Address bekerja?", options: ["Data Link Layer", "Network Layer", "Transport Layer", "Application Layer"], correct: 1, material: "Protokol IP bekerja pada Layer 3 (Network Layer)." }
+            ],
+            3: [
+                { category: "Subnetting /26", question: "Berapakah nilai Subnet Mask dari Notasi Prefix CIDR /26?", options: ["255.255.255.128", "255.255.255.192", "255.255.255.224", "255.255.255.240"], correct: 1, material: "Prefix /26 = 11000000 pada oktet terakhir = 128 + 64 = 192 (255.255.255.192)." },
+                { category: "Broadcast Address", question: "Pada subnet IP 192.168.1.0/24, manakah yang merupakan Broadcast Address?", options: ["192.168.1.0", "192.168.1.1", "192.168.1.254", "192.168.1.255"], correct: 3, material: "Alamat Broadcast adalah IP paling terakhir dalam blok subnet (192.168.1.255)." },
+                { category: "IPv6 Format", question: "Berapa bit panjang total alamat IP versi 6 (IPv6) dan ditulis dalam format apa?", options: ["64 bit - Biner", "128 bit - Heksadesimal", "32 bit - Desimal", "256 bit - Heksadesimal"], correct: 1, material: "IPv6 memiliki panjang 128 bit dan ditulis menggunakan format Heksadesimal." },
+                { category: "Subnetting /28", question: "Berapa jumlah total IP Address (termasuk Network & Broadcast) pada prefix /28?", options: ["8 IP", "16 IP", "32 IP", "64 IP"], correct: 1, material: "Jumlah IP = 2^(32-28) = 2^4 = 16 IP Total." },
+                { category: "Routing Gateway", question: "Pintu keluar utama jaringan lokal menuju internet luar dinamakan?", options: ["IP Broadcast", "Subnet Mask", "Default Gateway", "MAC Address"], correct: 2, material: "Default Gateway meneruskan lalu lintas jaringan dari LAN ke WAN/Internet." }
+            ],
+            4: [
+                { category: "Subnetting Lanjut /27", question: "Berapakah jumlah Usable Host pada subnet prefix CIDR /27?", options: ["14 Host", "30 Host", "62 Host", "126 Host"], correct: 1, material: "Prefix /27 = 2^(32-27) = 32 IP Total. Usable Host = 32 - 2 = 30 Host." },
+                { category: "Wildcard Mask", question: "Manakah nilai Wildcard Mask untuk subnet mask 255.255.255.192 (/26)?", options: ["0.0.0.63", "0.0.0.127", "0.0.0.31", "0.0.0.255"], correct: 0, material: "Wildcard Mask dihitung dengan (255.255.255.255 - Subnet Mask) -> 255 - 192 = 63." },
+                { category: "First Usable Host", question: "Pada subnet 192.168.10.64/26, manakah IP Host pertama yang bisa dipakai?", options: ["192.168.10.64", "192.168.10.65", "192.168.10.66", "192.168.10.127"], correct: 1, material: "Network ID = 192.168.10.64. Maka IP host pertama = 192.168.10.65." },
+                { category: "Supernetting / CIDR", question: "Teknik menggabungkan beberapa jaringan kecil menjadi satu blok jaringan besar disebut?", options: ["Subnetting", "Supernetting / CIDR Aggregation", "NAT", "Port Forwarding"], correct: 1, material: "Supernetting (Route Aggregation) menggabungkan beberapa subnet rute menjadi rute tunggal ringkas." },
+                { category: "Subnet Mask /30", question: "Berapakah nilai Subnet Mask untuk prefix /30 yang umum dipakai pada point-to-point link?", options: ["255.255.255.248", "255.255.255.252", "255.255.255.240", "255.255.255.254"], correct: 1, material: "Prefix /30 menghasilkan 4 IP (2 usable host) dengan subnet mask 255.255.255.252." }
+            ]
+        };
+
+        // Game State Variables
+        let playerName = "Player";
+        let selectedChar = characters[0];
+        let currentQuestionsPool = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let lives = 3;
+        let level = 1;
+        let timer = 20; // Strictly set to 20 seconds
+        let timerInterval = null;
+        let correctAnswersCount = 0;
+        let isAnswered = false;
+        let audioEnabled = true;
+
+        // Audio System
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let bgMusicOsc = null;
+
+        function playSound(type) {
+            if (!audioEnabled) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const now = audioCtx.currentTime;
+
+            if (type === 'klingklung') {
+                // Kling-Klung Sound Effect
+                const osc1 = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc1.type = 'sine';
+                osc2.type = 'sine';
+
+                osc1.frequency.setValueAtTime(1318.51, now); // Kling
+                osc2.frequency.setValueAtTime(1975.53, now + 0.1); // Klung
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc1.start(now);
+                osc1.stop(now + 0.12);
+                osc2.start(now + 0.1);
+                osc2.stop(now + 0.5);
+            } else if (type === 'wrong') {
+                // Web Splat Wrong Sound
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(260, now);
+                osc.frequency.exponentialRampToValueAtTime(90, now + 0.35);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            } else if (type === 'bg_hero') {
+                // Background Spidey Hero Melody
+                if (bgMusicOsc) return;
+                bgMusicOsc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                bgMusicOsc.type = 'triangle';
+                bgMusicOsc.frequency.setValueAtTime(220, now);
+                gain.gain.setValueAtTime(0.03, now);
+                bgMusicOsc.connect(gain);
+                gain.connect(audioCtx.destination);
+                bgMusicOsc.start();
+            }
+        }
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const icon = document.getElementById('icon-audio');
+            icon.className = audioEnabled ? "fa-solid fa-volume-high text-lg" : "fa-solid fa-volume-xmark text-lg text-slate-500";
+            if (audioEnabled) {
+                playSound('klingklung');
+            } else if (bgMusicOsc) {
+                bgMusicOsc.stop();
+                bgMusicOsc = null;
+            }
+        }
+
+        // Initialize UI
+        window.onload = function() {
+            renderCharacterSelector();
+            renderGroupMembers();
+        };
+
+        function renderCharacterSelector() {
+            const container = document.getElementById('character-selector');
+            container.innerHTML = '';
+            characters.forEach((char) => {
+                const isSelected = char.id === selectedChar.id;
+                const div = document.createElement('div');
+                div.className = `p-3 rounded-2xl cursor-pointer border-2 transition text-center ${isSelected ? 'bg-rose-900/40 border-rose-500 text-white shadow-lg shadow-rose-500/30' : 'spider-card border-slate-700 text-slate-400 hover:border-slate-500'}`;
+                div.onclick = () => {
+                    selectedChar = char;
+                    renderCharacterSelector();
+                    playSound('klingklung');
+                };
+                div.innerHTML = `
+                    <div class="text-3xl mb-1">${char.icon}</div>
+                    <div class="font-bold text-xs text-slate-200">${char.name}</div>
+                    <div class="text-[10px] text-sky-400 font-semibold">${char.desc}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function renderGroupMembers() {
+            const container = document.getElementById('members-container');
+            container.innerHTML = '';
+            groupMembers.forEach((m) => {
+                const div = document.createElement('div');
+                div.className = "p-2 bg-slate-900/90 rounded-lg border border-slate-700/80 font-semibold text-slate-200";
+                div.textContent = m;
+                container.appendChild(div);
+            });
+        }
+
+        // Validate Player Name Before Starting
+        function validateAndStart() {
+            const input = document.getElementById('player-name-input');
+            const val = input.value.trim();
+            if (!val) {
+                alert("Harap masukkan nama pemain terlebih dahulu!");
+                input.focus();
+                return;
+            }
+            playerName = val;
+            startCountdown();
+        }
+
+        // Reset to Start Screen to Change Name or Hero
+        function resetToStartScreen() {
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('flex');
+            document.getElementById('screen-start').classList.remove('hidden');
+        }
+
+        // Generate Questions for Current Level with Deep Option Shuffle
+        function getShuffledLevelQuestions(targetLevel) {
+            const rawList = levelQuestionsBank[targetLevel] || levelQuestionsBank[1];
+            const cloned = JSON.parse(JSON.stringify(rawList));
+
+            // Shuffle questions
+            for (let i = cloned.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+            }
+
+            // Shuffle options
+            return cloned.map(q => {
+                const correctText = q.options[q.correct];
+                for (let i = q.options.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+                }
+                q.correct = q.options.indexOf(correctText);
+                return q;
+            });
+        }
+
+        // 5-Second Countdown Handler
+        function startCountdown() {
+            document.getElementById('screen-start').classList.add('hidden');
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-countdown').classList.remove('hidden');
+
+            document.getElementById('countdown-player-name').textContent = playerName;
+
+            let count = 5;
+            const countEl = document.getElementById('countdown-number');
+            countEl.textContent = count;
+
+            playSound('bg_hero');
+
+            const countdownTimer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countEl.textContent = count;
+                    playSound('klingklung');
+                } else {
+                    clearInterval(countdownTimer);
+                    document.getElementById('screen-countdown').classList.add('hidden');
+                    startGame();
+                }
+            }, 1000);
+        }
+
+        // Start Game Reset
+        function startGame() {
+            level = 1;
+            score = 0;
+            lives = 3;
+            correctAnswersCount = 0;
+            currentQuestionIndex = 0;
+            
+            currentQuestionsPool = getShuffledLevelQuestions(level);
+
+            document.getElementById('screen-game').classList.remove('hidden');
+            document.getElementById('screen-game').classList.add('flex');
+            document.getElementById('player-avatar-badge').textContent = selectedChar.icon;
+            document.getElementById('active-player-name-display').textContent = playerName;
+
+            updateStats();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isAnswered = false;
+            clearInterval(timerInterval);
+            timer = 20; // 20 Seconds fixed time per question
+
+            // Check if level transition needed (every 5 correct answers)
+            const targetLevel = Math.min(Math.floor(correctAnswersCount / 5) + 1, 4);
+            if (targetLevel !== level) {
+                level = targetLevel;
+                currentQuestionsPool = getShuffledLevelQuestions(level);
+                currentQuestionIndex = 0;
+            }
+
+            if (currentQuestionIndex >= currentQuestionsPool.length) {
+                currentQuestionsPool = getShuffledLevelQuestions(level);
+                currentQuestionIndex = 0;
+            }
+
+            const q = currentQuestionsPool[currentQuestionIndex];
+
+            document.getElementById('material-box').classList.add('hidden');
+            document.getElementById('question-number').textContent = `Soal ${currentQuestionIndex + 1}`;
+            document.getElementById('question-category').textContent = q.category;
+            document.getElementById('question-text').textContent = q.question;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = `spidey-btn w-full p-3.5 rounded-2xl spider-card hover:bg-slate-800/90 border border-slate-700 text-left font-semibold text-slate-200 transition flex items-center justify-between group`;
+                btn.onclick = (e) => selectOption(idx, e);
+                
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3 text-xs md:text-sm">
+                        <span class="w-7 h-7 rounded-xl bg-slate-900 group-hover:bg-rose-500/20 group-hover:text-rose-400 flex items-center justify-center font-tech text-xs border border-slate-700">
+                            ${String.fromCharCode(65 + idx)}
+                        </span>
+                        <span>${opt}</span>
+                    </div>
+                    <i class="fa-regular fa-circle text-slate-500 group-hover:text-rose-400"></i>
+                `;
+                container.appendChild(btn);
+            });
+
+            updateTimerDisplay();
+            startTimer();
+        }
+
+        function updateTimerDisplay() {
+            document.getElementById('game-timer').textContent = `${timer}s`;
+            document.getElementById('timer-text-track').textContent = `${timer} Detik`;
+
+            const percentageUsed = ((20 - timer) / 20) * 100;
+            const walkerPos = Math.min(percentageUsed * 0.88, 88);
+            
+            const walkerEl = document.getElementById('walking-character');
+            const avatarEl = document.getElementById('walking-avatar');
+            const fillEl = document.getElementById('timer-progress-fill');
+
+            if (walkerEl && avatarEl && fillEl) {
+                walkerEl.style.left = `${walkerPos}%`;
+                avatarEl.textContent = '🏃';
+                fillEl.style.width = `${100 - percentageUsed}%`;
+            }
+        }
+
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                timer--;
+                updateTimerDisplay();
+
+                if (timer <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function handleTimeout() {
+            if (isAnswered) return;
+            isAnswered = true;
+            
+            triggerWebSplat();
+            playSound('wrong');
+
+            lives--;
+            updateStats();
+
+            showMaterialExplanation(false, "Waktu habis! Web-slinger kehabisan waktu (20s).");
+            highlightCorrectOption();
+        }
+
+        function selectOption(selectedIdx, event) {
+            if (isAnswered) return;
+            isAnswered = true;
+            clearInterval(timerInterval);
+
+            const q = currentQuestionsPool[currentQuestionIndex];
+            const isCorrect = selectedIdx === q.correct;
+            const options = document.getElementById('options-container').children;
+
+            if (isCorrect) {
+                playSound('klingklung');
+                triggerLoveBurst(event.clientX, event.clientY);
+                
+                const bonusScore = timer * (10 + level * 5);
+                score += 100 + bonusScore;
+                correctAnswersCount++;
+
+                options[selectedIdx].className = "spidey-btn w-full p-3.5 rounded-2xl bg-emerald-950/90 border-2 border-emerald-400 text-left font-semibold text-emerald-200 flex items-center justify-between";
+                options[selectedIdx].querySelector('i').className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+
+                updateStats();
+
+                // Auto-advance directly to next question on correct answer
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 700);
+
+            } else {
+                playSound('wrong');
+                triggerWebSplat();
+                lives--;
+
+                options[selectedIdx].className = "spidey-btn w-full p-3.5 rounded-2xl bg-rose-950/90 border-2 border-rose-500 text-left font-semibold text-rose-200 flex items-center justify-between";
+                options[selectedIdx].querySelector('i').className = "fa-solid fa-circle-xmark text-rose-400 text-lg";
+
+                highlightCorrectOption();
+                updateStats();
+                showMaterialExplanation(false);
+            }
+        }
+
+        // Web Splat Effect on Wrong Answer
+        function triggerWebSplat() {
+            const container = document.getElementById('web-splat-container');
+            container.classList.remove('hidden');
+            container.classList.add('active');
+            setTimeout(() => {
+                container.classList.add('hidden');
+                container.classList.remove('active');
+            }, 1100);
+        }
+
+        // Love Animation Effect on Correct Answer
+        function triggerLoveBurst(x, y) {
+            const hearts = ['❤️', '💖', '💕', '💗', '🕸️', '🕷️'];
+            for (let i = 0; i < 7; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'love-particle';
+                particle.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                
+                const offsetX = (Math.random() - 0.5) * 90;
+                const offsetY = (Math.random() - 0.5) * 50;
+                particle.style.left = `${x + offsetX}px`;
+                particle.style.top = `${y + offsetY}px`;
+                
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1200);
+            }
+        }
+
+        function highlightCorrectOption() {
+            const q = currentQuestionsPool[currentQuestionIndex];
+            const options = document.getElementById('options-container').children;
+            if (options[q.correct]) {
+                options[q.correct].className = "spidey-btn w-full p-3.5 rounded-2xl bg-emerald-900/50 border border-emerald-500/80 text-left font-semibold text-emerald-300 flex items-center justify-between";
+                options[q.correct].querySelector('i').className = "fa-solid fa-circle-check text-emerald-400";
+            }
+        }
+
+        function showMaterialExplanation(isCorrect, customMsg = "") {
+            const q = currentQuestionsPool[currentQuestionIndex];
+            const matBox = document.getElementById('material-box');
+            const matText = document.getElementById('material-text');
+
+            let prefix = isCorrect ? "🎉 <strong>Jawaban Benar!</strong> " : "💔 <strong>Jawaban Kurang Tepat! (Web Splat & Patah Hati)</strong><br>";
+            if (customMsg) prefix = `⏰ <strong>${customMsg}</strong><br>`;
+
+            matText.innerHTML = `${prefix} ${q.material}`;
+            matBox.classList.remove('hidden');
+        }
+
+        function nextQuestion() {
+            if (lives <= 0 || level > 4) {
+                endGame();
+            } else {
+                currentQuestionIndex++;
+                loadQuestion();
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('game-score').textContent = score;
+            document.getElementById('game-level').textContent = `Lvl ${level}`;
+
+            const livesContainer = document.getElementById('game-lives');
+            livesContainer.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < lives) {
+                    livesContainer.innerHTML += '<i class="fa-solid fa-heart text-rose-500"></i>';
+                } else {
+                    livesContainer.innerHTML += '<i class="fa-solid fa-heart-crack text-slate-600"></i>';
+                }
+            }
+        }
+
+        // Leaderboard Management
+        function saveLeaderboard(name, finalScore) {
+            let board = JSON.parse(localStorage.getItem('spider_net_lb') || '[]');
+            board.push({ name: name, icon: selectedChar.icon, score: finalScore });
+            board.sort((a, b) => b.score - a.score);
+            board = board.slice(0, 5);
+            localStorage.setItem('spider_net_lb', JSON.stringify(board));
+            return board;
+        }
+
+        function renderLeaderboard(board) {
+            const list = document.getElementById('leaderboard-list');
+            list.innerHTML = '';
+            if (board.length === 0) {
+                list.innerHTML = '<div class="text-slate-500 text-center py-2">Belum ada skor tersimpan.</div>';
+                return;
+            }
+            board.forEach((item, idx) => {
+                const div = document.createElement('div');
+                div.className = "p-2 bg-slate-900/90 rounded-xl flex items-center justify-between border border-slate-700/60";
+                div.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-amber-400 w-4">#${idx + 1}</span>
+                        <span>${item.icon} ${item.name}</span>
+                    </div>
+                    <span class="font-tech font-bold text-sky-400">${item.score} pts</span>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function endGame() {
+            clearInterval(timerInterval);
+
+            document.getElementById('screen-game').classList.add('hidden');
+            document.getElementById('screen-game').classList.remove('flex');
+            document.getElementById('screen-result').classList.remove('hidden');
+
+            const totalAttempted = Math.max(correctAnswersCount + (3 - lives), 1);
+            const accuracy = Math.round((correctAnswersCount / totalAttempted) * 100);
+
+            document.getElementById('final-score').textContent = score;
+            document.getElementById('final-level').textContent = `Lvl ${level}`;
+            document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('final-player-name-display').textContent = playerName;
+            document.getElementById('final-char-name').textContent = selectedChar.name;
+
+            const resTitle = document.getElementById('result-title');
+            const resIcon = document.getElementById('result-icon');
+            const rankBadge = document.getElementById('final-rank-badge');
+            const closingMsgEl = document.getElementById('final-player-message');
+
+            if (lives <= 0) {
+                resIcon.textContent = "🕸️";
+                resTitle.textContent = "TERJEBAK JARING! NYAWA HABIS";
+                resTitle.className = "font-spider text-3xl md:text-4xl font-black mb-1 text-rose-500";
+                rankBadge.textContent = "Spider Trainee";
+                rankBadge.className = "font-tech font-black text-rose-400 text-sm";
+                closingMsgEl.innerHTML = `Jangan menyerah <strong>${playerName}</strong>! Setiap Spider-Hero pernah gagal. Terus asah logika IP Address dan Subnetting kamu. Cobalah lagi bersama <strong>Kelompok Klingklung</strong>! 🕸️🔥`;
+            } else if (level >= 4) {
+                resIcon.textContent = "👑";
+                resTitle.textContent = "HEBAT! SPIDER-NET MASTER";
+                resTitle.className = "font-spider text-3xl md:text-4xl font-black mb-1 text-emerald-400";
+                rankBadge.textContent = "Spider-Net Master (S-Class)";
+                rankBadge.className = "font-tech font-black text-emerald-400 text-sm";
+                closingMsgEl.innerHTML = `Luar biasa, <strong>${playerName}</strong>! Kamu berhasil menaklukkan hingga Level 4! Pengetahuan subnetting dan jaringan kamu setingkat pahlawan super. Salam hormat dari <strong>Kelompok Klingklung</strong>! 🚀🕸️`;
+            } else {
+                resIcon.textContent = "🕷️";
+                resTitle.textContent = "KERJA BAGUS! TINGKATKAN LAGI";
+                resTitle.className = "font-spider text-3xl md:text-4xl font-black mb-1 text-amber-400";
+                rankBadge.textContent = "Net Web-Slinger";
+                rankBadge.className = "font-tech font-black text-amber-400 text-sm";
+                closingMsgEl.innerHTML = `Pencapaian yang keren, <strong>${playerName}</strong>! Kamu sudah menguasai dasar-dasar IP Address dengan baik. Latih terus subnetting agar bisa menembus Level 4! Salam dari <strong>Kelompok Klingklung</strong>! 💪✨`;
+            }
+
+            const board = saveLeaderboard(playerName, score);
+            renderLeaderboard(board);
+        }
+
+        function toggleGroupModal() {
+            const modal = document.getElementById('modal-group');
+            modal.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
